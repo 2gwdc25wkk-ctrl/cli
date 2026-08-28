@@ -27,6 +27,7 @@ metadata:
 | 更新数字进度/完成度     | 百分比或不带单位数字用 `+indicator-update`；需要改单位/目标值时查指标后用 `indicators patch`               | [`indicator-update`](references/lark-okr-indicator-update.md), [`indicators`](references/lark-okr-indicators.md)                                                                                                     |
 | 写文字进展          | 用 `+progress-create`；如果文本和数字都有，百分比或默认单位可使用 `--progress-percent` 统一改，非百分比单位更新量化指标 | [`progress-create`](references/lark-okr-progress-create.md), [`progress-list`](references/lark-okr-progress-list.md), [`progress-update`](references/lark-okr-progress-update.md)                                    |
 | 对齐目标           | 直接按对齐关系工作流处理                                                                     | [`alignments`](references/lark-okr-alignments.md)                                                                                                                                                                    |
+| 查询/创建/修改/解决 OKR 评论 | 按对象查询用 `+comment-list`，按周期聚合用 `+comment-detail`；写入和状态操作按评论形式选择对应 shortcut | [`comment`](references/lark-okr-comment-list.md), [`comment-create`](references/lark-okr-comment-create.md), [`comment-solve-reopen`](references/lark-okr-comment-solve-reopen.md) |
 
 分类只在用户明确要求分类，或创建 Objective 返回 `invalid parameters` 且怀疑租户强制开启分类时处理：用 `lark-cli okr categories list --params '{"owner_type":"user","page_size":100}' --as user` 查可用分类，选择语义合适且 `enabled=true` 的分类 ID；分类可后续调整，不必停下等待用户确认。
 
@@ -65,22 +66,30 @@ lark-cli okr +indicator-update \
 
 Shortcut 是对常用操作的高级封装（`lark-cli okr +<verb> [flags]`）。有 Shortcut 的操作优先使用。
 
-| Shortcut                                                       | 说明                                                                                |
-|----------------------------------------------------------------|-----------------------------------------------------------------------------------|
-| [`+cycle-list`](references/lark-okr-cycle-list.md)             | 分页获取特定用户的 OKR 周期列表，可以用 `--time-range` 对当前页后置筛选                                    |
-| [`+cycle-detail`](references/lark-okr-cycle-detail.md)         | 获取特定 OKR 中所有目标和关键结果的内容                                                            |
-| [`+create`](references/lark-okr-create.md)                     | 创建单个 Objective（可带备注），或向已有 Objective 新增 KR                                      |
-| [`+progress-list`](references/lark-okr-progress-list.md)       | 分页获取目标或关键结果的进展记录列表                                                                |
-| [`+progress-get`](references/lark-okr-progress-get.md)         | 根据 ID 获取单条 OKR 进展记录                                                               |
-| [`+progress-create`](references/lark-okr-progress-create.md)   | 为目标或关键结果创建进展记录                                                                    |
-| [`+progress-update`](references/lark-okr-progress-update.md)   | 更新指定 ID 的进展记录内容                                                                   |
-| [`+progress-delete`](references/lark-okr-progress-delete.md)   | 删除指定 ID 的进展记录（不可恢复）                                                               |
-| [`+upload-image`](references/lark-okr-image-upload.md)         | 上传图片用于 OKR 进展记录的富文本内容                                                             |
-| [`+batch-create`](references/lark-okr-batch-create.md)         | 批量创建 Objective（可带备注）和 KR                                                        |
-| [`+reorder`](references/lark-okr-reorder.md)                   | 调整 Objective 或 KR 的顺位                                                             |
-| [`+weight`](references/lark-okr-weight.md)                     | 调整 Objective 或 KR 的权重                                                             |
-| [`+indicator-update`](references/lark-okr-indicator-update.md) | 更新 Objective 或 KR 的当前进度指标。更复杂的量化指标操作见 [量化指标管理](references/lark-okr-indicators.md) |
-| [`+patch`](references/lark-okr-patch.md)                       | 部分更新 Objective 或 KR（content、notes、score、deadline）                                 |
+| Shortcut                                                         | 说明                                                                                |
+|------------------------------------------------------------------|-----------------------------------------------------------------------------------|
+| [`+cycle-list`](references/lark-okr-cycle-list.md)               | 分页获取特定用户的 OKR 周期列表，可以用 `--time-range` 对当前页后置筛选                                    |
+| [`+cycle-detail`](references/lark-okr-cycle-detail.md)           | 获取特定 OKR 中所有目标和关键结果的内容                                                            |
+| [`+create`](references/lark-okr-create.md)                       | 创建单个 Objective（可带备注），或向已有 Objective 新增 KR                                         |
+| [`+progress-list`](references/lark-okr-progress-list.md)         | 分页获取目标或关键结果的进展记录列表                                                                |
+| [`+progress-get`](references/lark-okr-progress-get.md)           | 根据 ID 获取单条 OKR 进展记录                                                               |
+| [`+progress-create`](references/lark-okr-progress-create.md)     | 为目标或关键结果创建进展记录                                                                    |
+| [`+progress-update`](references/lark-okr-progress-update.md)     | 更新指定 ID 的进展记录内容                                                                   |
+| [`+progress-delete`](references/lark-okr-progress-delete.md)     | 删除指定 ID 的进展记录（不可恢复）                                                               |
+| [`+upload-image`](references/lark-okr-image-upload.md)           | 上传图片用于 OKR 进展记录的富文本内容                                                             |
+| [`+batch-create`](references/lark-okr-batch-create.md)           | 批量创建 Objective（可带备注）和 KR                                                          |
+| [`+reorder`](references/lark-okr-reorder.md)                     | 调整 Objective 或 KR 的顺位                                                             |
+| [`+weight`](references/lark-okr-weight.md)                       | 调整 Objective 或 KR 的权重                                                             |
+| [`+indicator-update`](references/lark-okr-indicator-update.md)   | 更新 Objective 或 KR 的当前进度指标。更复杂的量化指标操作见 [量化指标管理](references/lark-okr-indicators.md) |
+| [`+patch`](references/lark-okr-patch.md)                         | 部分更新 Objective 或 KR（content、notes、score、deadline）                                 |
+| [`+comment-detail`](references/lark-okr-comment-detail.md)       | 获取周期下 Cycle/Objective/KeyResult/Progress 的全部评论                                    |
+| [`+comment-list`](references/lark-okr-comment-list.md)           | 分页获取单个 OKR 实体下的评论                                                                 |
+| [`+comment-get`](references/lark-okr-comment-get.md)             | 获取单条评论详情                                                                          |
+| [`+comment-create`](references/lark-okr-comment-create.md)       | 创建新评论或回复已有评论                                                                      |
+| [`+comment-patch`](references/lark-okr-comment-patch.md)         | 修改评论内容                                                                            |
+| [`+comment-delete`](references/lark-okr-comment-delete.md)       | 永久删除单条评论                                                                          |
+| [`+comment-solve`](references/lark-okr-comment-solve-reopen.md)  | 解决评论或划词评论串                                                                        |
+| [`+comment-reopen`](references/lark-okr-comment-solve-reopen.md) | 重新打开评论或划词评论串                                                                      |
 
 ### 创建场景选择
 
